@@ -1,0 +1,21 @@
+image: maven:3.9.11-eclipse-temurin-24-noble
+
+stages:
+  - build
+  - validate
+
+build:
+  stage: build
+  script:
+    - mvn verify
+  only:
+    - merge_requests
+    - master
+
+linter:
+  stage: validate
+  script:
+    - mvn clean compile -am spotless:check modernizer:modernizer spotbugs:check pmd:check pmd:cpd-check
+  only:
+    - merge_requests
+    - master
